@@ -3,6 +3,14 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+def ciVersionCode = System.getenv("CI_VERSION_CODE")
+def ciVersionName = System.getenv("CI_VERSION_NAME")
+def keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+def keystorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+def releaseKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
+def releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+def hasReleaseSigning = keystorePath && keystorePassword && releaseKeyAlias && releaseKeyPassword
+
 android {
     namespace 'com.example.androidhaterminal'
     compileSdk 34
@@ -11,8 +19,8 @@ android {
         applicationId "com.example.androidhaterminal"
         minSdk 21
         targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        versionCode ciVersionCode ? ciVersionCode.toInteger() : 1
+        versionName ciVersionName ?: "1.0"
     }
 
     buildFeatures {
@@ -26,6 +34,26 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    signingConfigs {
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(keystorePath)
+                storePassword keystorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (hasReleaseSigning) {
+                signingConfig signingConfigs.release
+            }
+        }
     }
 }
 
