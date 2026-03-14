@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">HA Terminal</string>
+    <string name="settings_title">Settings</string>
+    <string name="url_label">Display URL</string>
+    <string name="url_hint">http://homeassistant.local:8123</string>
+    <string name="timeout_label">Turn off screen after (seconds)</string>
+    <string name="timeout_hint">30</string>
+    <string name="save">Save</string>
+    <string name="exit_app">Exit App</string>
+</resources>
