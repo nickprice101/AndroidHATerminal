@@ -226,8 +226,13 @@ class MainActivity : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             val newUrl = urlField.text.toString().trim()
-            val newTimeout = timeoutField.text.toString().toIntOrNull() ?: DEFAULT_TIMEOUT
-            if (newTimeout <= 0) {
+            if (newUrl.isEmpty() || (!newUrl.startsWith("http://") && !newUrl.startsWith("https://"))) {
+                urlField.error = "URL must start with http:// or https://"
+                return@setOnClickListener
+            }
+            val timeoutText = timeoutField.text.toString().trim()
+            val newTimeout = timeoutText.toIntOrNull()
+            if (newTimeout == null || newTimeout <= 0) {
                 timeoutField.error = "Must be a positive number"
                 return@setOnClickListener
             }
